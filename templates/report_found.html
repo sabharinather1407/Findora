@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Report Found Item | ReFind</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+        <a
+            href="{{ url_for('home') }}"
+            class="logo"
+        >
+
+            <span class="logo-mark">
+                R
+            </span>
+
+            <span>
+
+                <strong>
+                    ReFind
+                </strong>
+
+                <small>
+                    Campus Lost & Found
+                </small>
+
+            </span>
+
+        </a>
+
+
+        <nav class="nav-links">
+
+            <a href="{{ url_for('home') }}">
+                Home
+            </a>
+
+            <a href="{{ url_for('search') }}">
+                Search
+            </a>
+
+            <a href="{{ url_for('report_lost') }}">
+                Report Lost
+            </a>
+
+            <a
+                href="{{ url_for('report_found') }}"
+                class="active"
+            >
+                Report Found
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     MAIN FORM
+===================================================== -->
+
+<main class="form-page">
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="form-header">
+
+        <p class="section-label">
+            FOUND ITEM REPORT
+        </p>
+
+
+        <h1>
+            Report a found item
+        </h1>
+
+
+        <p>
+            Tell us what you found and where you found it.
+            Providing accurate details will help ReFind identify
+            the possible owner.
+        </p>
+
+    </div>
+
+
+
+    <!-- =================================================
+         FORM
+    ================================================= -->
+
+    <form
+        class="report-form"
+        method="POST"
+        action="{{ url_for('report_found') }}"
+        enctype="multipart/form-data"
+    >
+
+
+        <!-- =================================================
+             SECTION 01 — ITEM INFORMATION
+        ================================================= -->
+
+        <div class="form-section">
+
+
+            <div class="form-section-heading">
+
+                <span class="form-number">
+                    01
+                </span>
+
+
+                <div>
+
+                    <h2>
+                        Item information
+                    </h2>
+
+                    <p>
+                        Tell us about the item you found.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="form-grid">
+
+
+                <!-- Item Name -->
+
+                <div class="form-group full-width">
+
+                    <label for="item-name">
+                        Item name
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="item-name"
+                        name="item_name"
+                        placeholder="e.g. Black Wallet"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- Category -->
+
+                <div class="form-group">
+
+                    <label for="category">
+                        Category
+                    </label>
+
+
+                    <select
+                        id="category"
+                        name="category"
+                        required
+                    >
+
+                        <option value="">
+                            Select category
+                        </option>
+
+                        <option value="Electronics">
+                            Electronics
+                        </option>
+
+                        <option value="ID / Documents">
+                            ID / Documents
+                        </option>
+
+                        <option value="Bags">
+                            Bags
+                        </option>
+
+                        <option value="Clothing">
+                            Clothing
+                        </option>
+
+                        <option value="Accessories">
+                            Accessories
+                        </option>
+
+                        <option value="Stationery">
+                            Stationery
+                        </option>
+
+                        <option value="Water Bottle">
+                            Water Bottle
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- Color -->
+
+                <div class="form-group">
+
+                    <label for="color">
+                        Color
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="color"
+                        name="color"
+                        placeholder="e.g. Black"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- Description -->
+
+                <div class="form-group full-width">
+
+                    <label for="description">
+                        Description
+                    </label>
+
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        rows="5"
+                        placeholder="Describe any unique features, marks, stickers, scratches, etc."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             SECTION 02 — LOCATION & TIME
+        ================================================= -->
+
+        <div class="form-section">
+
+
+            <div class="form-section-heading">
+
+                <span class="form-number">
+                    02
+                </span>
+
+
+                <div>
+
+                    <h2>
+                        Where did you find it?
+                    </h2>
+
+                    <p>
+                        Give us the location and approximate time
+                        you found it.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="form-grid">
+
+
+                <!-- Location -->
+
+                <div class="form-group">
+
+                    <label for="location-type">
+                        Location
+                    </label>
+
+
+                    <select
+                        id="location-type"
+                        name="location_type"
+                        required
+                    >
+
+                        <option value="">
+                            Select location
+                        </option>
+
+                        <option value="Academic Block">
+                            Academic Block
+                        </option>
+
+                        <option value="Administrative Block">
+                            Administrative Block
+                        </option>
+
+                        <option value="Library">
+                            Library
+                        </option>
+
+                        <option value="Auditorium">
+                            Auditorium
+                        </option>
+
+                        <option value="Boys Hostel">
+                            Boys' Hostel
+                        </option>
+
+                        <option value="Girls Hostel">
+                            Girls' Hostel
+                        </option>
+
+                        <option value="Health Centre">
+                            Health Centre
+                        </option>
+
+                        <option value="Gym">
+                            Gym
+                        </option>
+
+                        <option value="Food Court">
+                            Food Court
+                        </option>
+
+                        <option value="Cafeteria">
+                            Cafeteria
+                        </option>
+
+                        <option value="Football Field">
+                            Football Field
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- Academic Block Details -->
+
+                <div
+                    class="form-group"
+                    id="academic-block-group"
+                    style="display: none;"
+                >
+
+                    <label for="location-details">
+                        Academic Block Name
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="location-details"
+                        name="location_details"
+                        placeholder="e.g. CS Block / Block 3 / Main Academic Block"
+                    >
+
+                </div>
+
+
+
+                <!-- Date -->
+
+                <div class="form-group">
+
+                    <label for="date">
+                        Date found
+                    </label>
+
+
+                    <input
+                        type="date"
+                        id="date"
+                        name="date_lost"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- Time -->
+
+                <div class="form-group">
+
+                    <label for="time">
+                        Approximate time found
+                    </label>
+
+
+                    <input
+                        type="time"
+                        id="time"
+                        name="time_lost"
+                        required
+                    >
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             SECTION 03 — IMAGE
+        ================================================= -->
+
+        <div class="form-section">
+
+
+            <div class="form-section-heading">
+
+                <span class="form-number">
+                    03
+                </span>
+
+
+                <div>
+
+                    <h2>
+                        Add a photo
+                    </h2>
+
+                    <p>
+                        A photo can make matching easier.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="upload-box">
+
+                <div class="upload-icon">
+                    📷
+                </div>
+
+
+                <h3>
+                    Upload an item photo
+                </h3>
+
+
+                <p>
+                    JPG, PNG or WEBP
+                </p>
+
+
+                <input
+                    type="file"
+                    name="image"
+                    accept="image/jpeg,image/png,image/webp"
+                >
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             SUBMIT
+        ================================================= -->
+
+        <div class="form-submit">
+
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                Report Found Item →
+            </button>
+
+
+            <p>
+                Your report will be added to the ReFind system.
+            </p>
+
+
+        </div>
+
+
+    </form>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="footer">
+
+
+    <div class="footer-container">
+
+
+        <div>
+
+            <div class="footer-logo">
+                ReFind
+            </div>
+
+
+            <p>
+                Helping lost items find their way home.
+            </p>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <a href="{{ url_for('home') }}">
+                Home
+            </a>
+
+
+            <a href="{{ url_for('search') }}">
+                Search
+            </a>
+
+
+            <a href="{{ url_for('report_lost') }}">
+                Report Lost Item
+            </a>
+
+
+            <a href="{{ url_for('report_found') }}">
+                Report Found Item
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        ReFind — Campus Lost & Found
+
+    </div>
+
+
+</footer>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+
+</html>

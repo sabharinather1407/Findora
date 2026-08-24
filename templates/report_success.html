@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Report Submitted | ReFind</title>
+
+    <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}"
+>
+
+</head>
+
+
+<body>
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+        <a href="/" class="logo">
+
+            <span class="logo-mark">
+                R
+            </span>
+
+            <span>
+                <strong>ReFind</strong>
+                <small>Campus Lost & Found</small>
+            </span>
+
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="success-page">
+
+    <div class="success-icon">
+        ✓
+    </div>
+
+    <p class="section-label">
+        REPORT SUBMITTED
+    </p>
+
+    <h1>
+        Your lost item has been reported.
+    </h1>
+
+    <p class="success-description">
+        Your report has been successfully added to the
+        ReFind system. We'll use these details when
+        searching for possible matches.
+    </p>
+
+
+    <div class="report-summary">
+
+        <div class="report-id">
+
+            <span>
+                REPORT ID
+            </span>
+
+            <strong>
+                RF-{{ "%04d"|format(report["id"]) }}
+            </strong>
+
+        </div>
+
+
+        <div class="summary-row">
+
+            <span>Item</span>
+
+            <strong>
+                {{ report["item_name"] }}
+            </strong>
+
+        </div>
+
+
+        <div class="summary-row">
+
+            <span>Category</span>
+
+            <strong>
+                {{ report["category"] }}
+            </strong>
+
+        </div>
+
+
+        <div class="summary-row">
+
+            <span>Location</span>
+
+            <strong>
+
+                {{ report["location_type"] }}
+
+                {% if report["location_details"] %}
+                    — {{ report["location_details"] }}
+                {% endif %}
+
+            </strong>
+
+        </div>
+
+
+        <div class="summary-row">
+
+            <span>Date</span>
+
+            <strong>
+                {{ report["date_lost"] }}
+            </strong>
+
+        </div>
+
+
+        <div class="summary-row">
+
+            <span>Approximate time</span>
+
+            <strong>
+                {{ report["time_lost"] }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="success-actions">
+
+        <a
+            href="/"
+            class="btn btn-primary"
+        >
+            Back to Home
+        </a>
+
+        <a
+            href="/report-lost"
+            class="btn btn-secondary"
+        >
+            Report Another Item
+        </a>
+
+    </div>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div>
+
+            <div class="footer-logo">
+                ReFind
+            </div>
+
+            <p>
+                Helping lost items find their way home.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>

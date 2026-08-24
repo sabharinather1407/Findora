@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ReFind | Campus Lost & Found</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+        <a
+            href="{{ url_for('home') }}"
+            class="logo"
+        >
+
+            <span class="logo-mark">
+                R
+            </span>
+
+            <span>
+
+                <strong>
+                    ReFind
+                </strong>
+
+                <small>
+                    Campus Lost & Found
+                </small>
+
+            </span>
+
+        </a>
+
+
+        <nav class="nav-links">
+
+            <a href="{{ url_for('home') }}">
+                Home
+            </a>
+
+            <a href="{{ url_for('search') }}">
+                Search
+            </a>
+
+            <a href="{{ url_for('report_lost') }}">
+                Report Lost
+            </a>
+
+            <a href="{{ url_for('report_found') }}">
+                Report Found
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main>
+
+
+    <!-- =================================================
+         HERO
+    ================================================= -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="hero-badge">
+                Campus Lost & Found
+            </div>
+
+
+            <h1>
+
+                Lost something on campus?
+
+                <span>
+                    ReFind it faster.
+                </span>
+
+            </h1>
+
+
+            <p>
+
+                ReFind connects lost and found reports across
+                campus and helps identify possible matches so
+                items can find their way back to their owners.
+
+            </p>
+
+
+            <div class="hero-buttons">
+
+                <a
+                    href="{{ url_for('report_lost') }}"
+                    class="btn btn-primary"
+                >
+                    Report Lost Item
+                </a>
+
+
+                <a
+                    href="{{ url_for('report_found') }}"
+                    class="btn btn-secondary"
+                >
+                    Report Found Item
+                </a>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('search') }}"
+                class="search-link"
+            >
+                🔎 Search existing reports →
+            </a>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         STATISTICS
+    ================================================= -->
+
+    <section class="stats-section">
+
+
+        <div class="stat-card">
+
+            <span class="stat-number">
+                {{ total_reports }}
+            </span>
+
+            <span class="stat-label">
+                Total Reports
+            </span>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-number">
+                {{ found_items }}
+            </span>
+
+            <span class="stat-label">
+                Found Items
+            </span>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-number">
+                {{ returned_items }}
+            </span>
+
+            <span class="stat-label">
+                Items Returned
+            </span>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =================================================
+         RECENT REPORTS
+    ================================================= -->
+
+    <section class="section">
+
+
+        <div class="section-heading">
+
+            <div>
+
+                <p class="section-label">
+                    CAMPUS ACTIVITY
+                </p>
+
+                <h2>
+                    Recently reported
+                </h2>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('search') }}"
+                class="view-link"
+            >
+                View all →
+            </a>
+
+        </div>
+
+
+
+        <div class="report-grid">
+
+
+            {% if recent_reports %}
+
+
+                {% for report in recent_reports %}
+
+
+                    <article class="report-card">
+
+
+                        <!-- IMAGE -->
+
+                        {% if report["image_filename"] %}
+
+                            <div class="item-image">
+
+                                <img
+                                    src="{{ url_for(
+                                        'static',
+                                        filename='uploads/' + report['image_filename']
+                                    ) }}"
+                                    alt="{{ report['item_name'] }}"
+                                    style="
+                                        width: 100%;
+                                        height: 100%;
+                                        object-fit: cover;
+                                    "
+                                >
+
+                            </div>
+
+                        {% else %}
+
+                            <div class="item-image">
+
+                                {% if report["report_type"] == "LOST" %}
+                                    🔎
+                                {% else %}
+                                    📦
+                                {% endif %}
+
+                            </div>
+
+                        {% endif %}
+
+
+
+                        <!-- CONTENT -->
+
+                        <div class="report-content">
+
+
+                            <div class="report-top">
+
+                                {% if report["report_type"] == "LOST" %}
+
+                                    <span class="status lost">
+                                        LOST
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status found">
+                                        FOUND
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <h3>
+                                {{ report["item_name"] }}
+                            </h3>
+
+
+                            <p>
+                                📍 {{ report["location_type"] }}
+
+                                {% if report["location_details"] %}
+                                    — {{ report["location_details"] }}
+                                {% endif %}
+                            </p>
+
+
+                            <p>
+                                📅 {{ report["date_lost"] }}
+                            </p>
+
+
+                            <a
+                                href="{{ url_for(
+                                    'report_details',
+                                    report_id=report['id']
+                                ) }}"
+                                class="card-link"
+                            >
+                                View details →
+                            </a>
+
+
+                        </div>
+
+                    </article>
+
+
+                {% endfor %}
+
+
+            {% else %}
+
+
+                <!-- EMPTY STATE -->
+
+                <div class="empty-results">
+
+                    <div class="empty-icon">
+                        📋
+                    </div>
+
+                    <h3>
+                        No reports yet
+                    </h3>
+
+                    <p>
+                        Be the first to report a lost or found item.
+                    </p>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         SMART MATCHING
+    ================================================= -->
+
+    <section class="matching-section">
+
+
+        <div class="matching-text">
+
+            <p class="section-label">
+                SMART MATCHING
+            </p>
+
+
+            <h2>
+
+                We don't just store reports.
+
+                <span>
+                    We connect them.
+                </span>
+
+            </h2>
+
+
+            <p>
+
+                ReFind compares details from lost and found
+                reports to identify possible matches based on
+                item information, location and time.
+
+            </p>
+
+
+            <a
+                href="{{ url_for('search') }}"
+                class="btn btn-dark"
+            >
+                Explore Smart Matching →
+            </a>
+
+        </div>
+
+
+
+        <div class="match-demo">
+
+
+            <div class="match-item">
+
+                <span class="match-label lost-label">
+                    LOST ITEM
+                </span>
+
+
+                <h3>
+                    Black Wallet
+                </h3>
+
+
+                <p>
+                    📍 Block B
+                </p>
+
+
+                <p>
+                    🕐 11:30 AM
+                </p>
+
+            </div>
+
+
+
+            <div class="match-score">
+
+                <div class="score-circle">
+                    92%
+                </div>
+
+
+                <span>
+                    Possible Match
+                </span>
+
+            </div>
+
+
+
+            <div class="match-item">
+
+                <span class="match-label found-label">
+                    FOUND ITEM
+                </span>
+
+
+                <h3>
+                    Black Leather Wallet
+                </h3>
+
+
+                <p>
+                    📍 Block B
+                </p>
+
+
+                <p>
+                    🕐 11:45 AM
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         HOW IT WORKS
+    ================================================= -->
+
+    <section class="section how-section">
+
+
+        <div class="center-heading">
+
+            <p class="section-label">
+                HOW IT WORKS
+            </p>
+
+
+            <h2>
+                From lost to found in three steps.
+            </h2>
+
+        </div>
+
+
+
+        <div class="steps">
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    01
+                </div>
+
+
+                <h3>
+                    Report
+                </h3>
+
+
+                <p>
+                    Tell us what you lost or found and provide
+                    the relevant details.
+                </p>
+
+            </div>
+
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    02
+                </div>
+
+
+                <h3>
+                    Match
+                </h3>
+
+
+                <p>
+                    ReFind compares reports and identifies
+                    possible matches.
+                </p>
+
+            </div>
+
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    03
+                </div>
+
+
+                <h3>
+                    Recover
+                </h3>
+
+
+                <p>
+                    Verify the item and mark it as returned
+                    to complete the recovery.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="footer">
+
+
+    <div class="footer-container">
+
+
+        <div>
+
+            <div class="footer-logo">
+                ReFind
+            </div>
+
+
+            <p>
+                Helping lost items find their way home.
+            </p>
+
+        </div>
+
+
+
+        <div class="footer-links">
+
+            <a href="{{ url_for('home') }}">
+                Home
+            </a>
+
+
+            <a href="{{ url_for('search') }}">
+                Search
+            </a>
+
+
+            <a href="{{ url_for('report_lost') }}">
+                Report Lost Item
+            </a>
+
+
+            <a href="{{ url_for('report_found') }}">
+                Report Found Item
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="footer-bottom">
+
+        ReFind — Campus Lost & Found
+
+    </div>
+
+
+</footer>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>

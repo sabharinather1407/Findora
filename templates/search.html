@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Search Reports | ReFind</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+        <a
+            href="{{ url_for('home') }}"
+            class="logo"
+        >
+
+            <span class="logo-mark">
+                R
+            </span>
+
+            <span>
+
+                <strong>
+                    ReFind
+                </strong>
+
+                <small>
+                    Campus Lost & Found
+                </small>
+
+            </span>
+
+        </a>
+
+
+        <nav class="nav-links">
+
+            <a href="{{ url_for('home') }}">
+                Home
+            </a>
+
+            <a
+                href="{{ url_for('search') }}"
+                class="active"
+            >
+                Search
+            </a>
+
+            <a href="{{ url_for('report_lost') }}">
+                Report Lost
+            </a>
+
+            <a href="{{ url_for('report_found') }}">
+                Report Found
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     MAIN SEARCH PAGE
+===================================================== -->
+
+<main class="search-page">
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="search-header">
+
+        <p class="section-label">
+            CAMPUS REPORTS
+        </p>
+
+
+        <h1>
+            Find a lost or found item.
+        </h1>
+
+
+        <p>
+            Search reports submitted by students and staff
+            across the campus.
+        </p>
+
+    </div>
+
+
+
+    <!-- =================================================
+         SEARCH FORM
+    ================================================= -->
+
+    <form
+        class="search-form"
+        method="GET"
+        action="{{ url_for('search') }}"
+    >
+
+
+        <!-- Search input -->
+
+        <div class="search-input-wrapper">
+
+            <span class="search-icon">
+                🔎
+            </span>
+
+
+            <input
+                type="text"
+                name="q"
+                value="{{ query }}"
+                placeholder="Search by item name, color or description..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+
+        <!-- Filters -->
+
+        <div class="search-filters">
+
+
+            <!-- Type -->
+
+            <div class="filter-group">
+
+                <label for="report-type">
+                    Type
+                </label>
+
+
+                <select
+                    name="type"
+                    id="report-type"
+                >
+
+                    <option
+                        value="ALL"
+                        {% if report_type == "ALL" %}
+                            selected
+                        {% endif %}
+                    >
+                        All Reports
+                    </option>
+
+
+                    <option
+                        value="LOST"
+                        {% if report_type == "LOST" %}
+                            selected
+                        {% endif %}
+                    >
+                        Lost
+                    </option>
+
+
+                    <option
+                        value="FOUND"
+                        {% if report_type == "FOUND" %}
+                            selected
+                        {% endif %}
+                    >
+                        Found
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- Category -->
+
+            <div class="filter-group">
+
+                <label for="category">
+                    Category
+                </label>
+
+
+                <select
+                    name="category"
+                    id="category"
+                >
+
+                    <option
+                        value="ALL"
+                        {% if category == "ALL" %}
+                            selected
+                        {% endif %}
+                    >
+                        All Categories
+                    </option>
+
+
+                    <option
+                        value="Electronics"
+                        {% if category == "Electronics" %}
+                            selected
+                        {% endif %}
+                    >
+                        Electronics
+                    </option>
+
+
+                    <option
+                        value="ID / Documents"
+                        {% if category == "ID / Documents" %}
+                            selected
+                        {% endif %}
+                    >
+                        ID / Documents
+                    </option>
+
+
+                    <option
+                        value="Bags"
+                        {% if category == "Bags" %}
+                            selected
+                        {% endif %}
+                    >
+                        Bags
+                    </option>
+
+
+                    <option
+                        value="Clothing"
+                        {% if category == "Clothing" %}
+                            selected
+                        {% endif %}
+                    >
+                        Clothing
+                    </option>
+
+
+                    <option
+                        value="Accessories"
+                        {% if category == "Accessories" %}
+                            selected
+                        {% endif %}
+                    >
+                        Accessories
+                    </option>
+
+
+                    <option
+                        value="Stationery"
+                        {% if category == "Stationery" %}
+                            selected
+                        {% endif %}
+                    >
+                        Stationery
+                    </option>
+
+
+                    <option
+                        value="Water Bottle"
+                        {% if category == "Water Bottle" %}
+                            selected
+                        {% endif %}
+                    >
+                        Water Bottle
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- Search button -->
+
+            <button
+                type="submit"
+                class="btn btn-primary search-button"
+            >
+                Search
+            </button>
+
+
+        </div>
+
+    </form>
+
+
+
+    <!-- =================================================
+         RESULTS
+    ================================================= -->
+
+    <section class="search-results">
+
+
+        <div class="results-header">
+
+            <h2>
+                Search results
+            </h2>
+
+
+            <span>
+
+                {{ reports|length }}
+
+                result{% if reports|length != 1 %}s{% endif %}
+
+            </span>
+
+        </div>
+
+
+
+        {% if reports %}
+
+
+            <!-- RESULTS GRID -->
+
+            <div class="search-grid">
+
+
+                {% for report in reports %}
+
+
+                    <article class="search-card">
+
+
+                        <!-- IMAGE -->
+
+                        <div class="search-card-image">
+
+                            {% if report["image_filename"] %}
+
+                                <img
+                                    src="{{ url_for(
+                                        'static',
+                                        filename='uploads/' + report['image_filename']
+                                    ) }}"
+                                    alt="{{ report['item_name'] }}"
+                                >
+
+                            {% else %}
+
+                                <div class="search-no-image">
+
+                                    {% if report["report_type"] == "LOST" %}
+                                        🔎
+                                    {% else %}
+                                        📦
+                                    {% endif %}
+
+                                    <span>
+                                        No image
+                                    </span>
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+
+                        <!-- STATUS -->
+
+                        <div class="search-card-top">
+
+                            {% if report["report_type"] == "LOST" %}
+
+                                <span class="status lost">
+                                    LOST
+                                </span>
+
+                            {% else %}
+
+                                <span class="status found">
+                                    FOUND
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+
+                        <!-- ITEM -->
+
+                        <h3>
+                            {{ report["item_name"] }}
+                        </h3>
+
+
+                        <p>
+                            {{ report["category"] }}
+                            ·
+                            {{ report["color"] }}
+                        </p>
+
+
+
+                        <!-- DETAILS -->
+
+                        <div class="search-card-details">
+
+
+                            <span>
+
+                                📍
+
+                                {{ report["location_type"] }}
+
+                                {% if report["location_details"] %}
+
+                                    —
+                                    {{ report["location_details"] }}
+
+                                {% endif %}
+
+                            </span>
+
+
+                            <span>
+
+                                📅
+                                {{ report["date_lost"] }}
+
+                            </span>
+
+
+                            <span>
+
+                                🕐
+                                {{ report["time_lost"] }}
+
+                            </span>
+
+
+                        </div>
+
+
+
+                        <!-- VIEW REPORT -->
+
+                        <a
+                            href="{{ url_for(
+                                'report_details',
+                                report_id=report['id']
+                            ) }}"
+                            class="card-link"
+                        >
+                            View Report →
+                        </a>
+
+
+                    </article>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+        {% else %}
+
+
+            <!-- =================================================
+                 EMPTY RESULTS
+            ================================================= -->
+
+            <div class="empty-results">
+
+                <div class="empty-icon">
+                    🔎
+                </div>
+
+
+                <h3>
+                    No reports found
+                </h3>
+
+
+                <p>
+                    Try a different search term or filter.
+                </p>
+
+
+                <a
+                    href="{{ url_for('search') }}"
+                    class="btn btn-secondary"
+                    style="margin-top: 18px;"
+                >
+                    Clear Search
+                </a>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </section>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+
+        <div>
+
+            <div class="footer-logo">
+                ReFind
+            </div>
+
+
+            <p>
+                Helping lost items find their way home.
+            </p>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <a href="{{ url_for('home') }}">
+                Home
+            </a>
+
+
+            <a href="{{ url_for('search') }}">
+                Search
+            </a>
+
+
+            <a href="{{ url_for('report_lost') }}">
+                Report Lost Item
+            </a>
+
+
+            <a href="{{ url_for('report_found') }}">
+                Report Found Item
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        ReFind — Campus Lost & Found
+
+    </div>
+
+</footer>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+
+</html>

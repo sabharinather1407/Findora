@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Possible Matches | ReFind</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+        <a href="/" class="logo">
+
+            <span class="logo-mark">
+                R
+            </span>
+
+            <span>
+                <strong>ReFind</strong>
+                <small>Campus Lost & Found</small>
+            </span>
+
+        </a>
+
+
+        <nav class="nav-links">
+
+            <a href="/">
+                Home
+            </a>
+
+            <a href="/search">
+                Search
+            </a>
+
+            <a href="/report-lost">
+                Report Lost
+            </a>
+
+            <a href="/report-found">
+                Report Found
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<main class="matches-page">
+
+    <div class="matches-header">
+
+        <p class="section-label">
+            SMART MATCHING
+        </p>
+
+        <h1>
+            Possible matches
+        </h1>
+
+        <p>
+            ReFind compared this report against
+            available {{ selected_report["report_type"]|lower }}
+            reports.
+        </p>
+
+    </div>
+
+
+    <!-- Selected Report -->
+
+    <section class="selected-report">
+
+        <div>
+
+            <span class="status
+                {% if selected_report['report_type'] == 'LOST' %}
+                    lost
+                {% else %}
+                    found
+                {% endif %}
+            ">
+
+                {{ selected_report["report_type"] }}
+
+            </span>
+
+
+            <h2>
+                {{ selected_report["item_name"] }}
+            </h2>
+
+
+            <p>
+                {{ selected_report["category"] }}
+                ·
+                {{ selected_report["color"] }}
+            </p>
+
+        </div>
+
+
+        <div class="selected-location">
+
+            📍 {{ selected_report["location_type"] }}
+
+            {% if selected_report["location_details"] %}
+                — {{ selected_report["location_details"] }}
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- Matches -->
+
+    {% if matches %}
+
+        <div class="match-list">
+
+            {% for match in matches %}
+
+                <article class="match-card">
+
+
+                    <!-- Match Image -->
+
+                    <div class="match-image">
+
+                        {% if match["report"]["image_filename"] %}
+
+                            <img
+                                src="{{ url_for(
+                                    'static',
+                                    filename='uploads/' + match['report']['image_filename']
+                                ) }}"
+                                alt="Matched item"
+                            >
+
+                        {% else %}
+
+                            <div class="no-image">
+                                No image
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Match Score -->
+
+                    <div class="match-score-box">
+
+                        <div class="match-score">
+                            {{ match["score"] }}%
+                        </div>
+
+                        <span>
+                            Match
+                        </span>
+
+                    </div>
+
+
+                    <!-- Match Information -->
+
+                    <div class="match-information">
+
+
+                        <!-- Report Type -->
+
+                        <div class="match-type">
+
+                            <span class="status
+                                {% if match['report']['report_type'] == 'LOST' %}
+                                    lost
+                                {% else %}
+                                    found
+                                {% endif %}
+                            ">
+
+                                {{ match["report"]["report_type"] }}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- Item Name -->
+
+                        <h3>
+                            {{ match["report"]["item_name"] }}
+                        </h3>
+
+
+                        <!-- Category + Color -->
+
+                        <p>
+                            {{ match["report"]["category"] }}
+                            ·
+                            {{ match["report"]["color"] }}
+                        </p>
+
+
+                        <!-- Details -->
+
+                        <div class="match-details">
+
+                            <span>
+
+                                📍
+
+                                {{ match["report"]["location_type"] }}
+
+                                {% if match["report"]["location_details"] %}
+                                    — {{ match["report"]["location_details"] }}
+                                {% endif %}
+
+                            </span>
+
+
+                            <span>
+
+                                📅
+
+                                {{ match["report"]["date_lost"] }}
+
+                            </span>
+
+
+                            <span>
+
+                                🕐
+
+                                {{ match["report"]["time_lost"] }}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- Match Reasons -->
+
+                        <div class="match-reasons">
+
+                            <strong>
+                                Why this may match
+                            </strong>
+
+                            <div>
+
+                                {% for reason in match["reasons"] %}
+
+                                    <span>
+                                        ✓ {{ reason }}
+                                    </span>
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- View Report -->
+
+                        <a
+                            href="{{ url_for(
+                                'report_details',
+                                report_id=match['report']['id']
+                            ) }}"
+                            class="btn btn-primary"
+                        >
+
+                            View Full Report →
+
+                        </a>
+
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+
+        <!-- No Matches -->
+
+        <div class="no-matches">
+
+            <div class="empty-icon">
+                🔎
+            </div>
+
+            <h2>
+                No strong matches yet
+            </h2>
+
+            <p>
+                ReFind couldn't find any reports
+                with enough matching information.
+            </p>
+
+            <a
+                href="/search"
+                class="btn btn-primary"
+            >
+
+                Search Reports
+
+            </a>
+
+        </div>
+
+
+    {% endif %}
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div>
+
+            <div class="footer-logo">
+                ReFind
+            </div>
+
+            <p>
+                Helping lost items find their way home.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        ReFind — Campus Lost & Found
+
+    </div>
+
+</footer>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>

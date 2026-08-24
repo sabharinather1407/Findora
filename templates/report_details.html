@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>{{ report["item_name"] }} | ReFind</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+        <a href="/" class="logo">
+
+            <span class="logo-mark">
+                R
+            </span>
+
+            <span>
+                <strong>ReFind</strong>
+                <small>Campus Lost & Found</small>
+            </span>
+
+        </a>
+
+
+        <nav class="nav-links">
+
+            <a href="/">
+                Home
+            </a>
+
+            <a href="/search">
+                Search
+            </a>
+
+            <a href="/report-lost">
+                Report Lost
+            </a>
+
+            <a href="/report-found">
+                Report Found
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<main class="report-details-page">
+
+    <a
+        href="/search"
+        class="back-link"
+    >
+        ← Back to Search
+    </a>
+
+
+    <div class="details-layout">
+
+
+        <!-- Report information -->
+
+        <section class="details-card">
+
+            <div class="details-top">
+
+                <span class="status
+                    {% if report['report_type'] == 'LOST' %}
+                        lost
+                    {% else %}
+                        found
+                    {% endif %}
+                ">
+
+                    {{ report["report_type"] }}
+
+                </span>
+
+
+                <span class="report-number">
+
+                    RF-{{ "%04d"|format(report["id"]) }}
+
+                </span>
+
+            </div>
+
+
+            <h1>
+                {{ report["item_name"] }}
+            </h1>
+
+
+            <p class="details-description">
+
+                {{ report["description"] }}
+
+            </p>
+
+            {% if report["image_filename"] %}
+
+    <div class="report-image-container">
+
+        <img
+            src="{{ url_for(
+                'static',
+                filename='uploads/' + report['image_filename']
+            ) }}"
+            alt="Report image"
+            class="report-image"
+        >
+
+    </div>
+
+{% endif %}
+
+            
+            <div class="details-divider"></div>
+
+
+            <div class="details-grid">
+
+
+                <div class="detail-item">
+
+                    <span>
+                        CATEGORY
+                    </span>
+
+                    <strong>
+                        {{ report["category"] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        COLOR
+                    </span>
+
+                    <strong>
+                        {{ report["color"] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        LOCATION
+                    </span>
+
+                    <strong>
+
+                        {{ report["location_type"] }}
+
+                        {% if report["location_details"] %}
+
+                            <br>
+
+                            {{ report["location_details"] }}
+
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        DATE
+                    </span>
+
+                    <strong>
+                        {{ report["date_lost"] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        APPROXIMATE TIME
+                    </span>
+
+                    <strong>
+                        {{ report["time_lost"] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>
+                        STATUS
+                    </span>
+
+                    <strong>
+                        {{ report["status"] }}
+                    </strong>
+
+                </div>
+
+            </div>
+            {% if report["status"] == "ACTIVE" %}
+
+    <form
+        method="POST"
+        action="{{ url_for('mark_returned', report_id=report['id']) }}"
+    >
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            Mark as Returned
+        </button>
+
+    </form>
+
+{% else %}
+
+    <p class="returned-message">
+        ✓ This item has been returned.
+    </p>
+
+{% endif %}
+
+        </section>
+
+
+        <!-- Action panel -->
+
+        <aside class="details-actions">
+
+            <div class="action-card">
+
+                <p class="section-label">
+                    NEXT STEP
+                </p>
+
+
+                <h2>
+                    Looking for a match?
+                </h2>
+
+
+                <p>
+                    ReFind can compare this report with
+                    other active reports and identify
+                    possible matches.
+                </p>
+
+
+                <a
+                    href="/matches/{{ report['id'] }}"
+                    class="btn btn-primary details-match-button"
+                >
+                    Find Possible Matches
+                </a>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <strong>
+                    ReFind Matching
+                </strong>
+
+                <p>
+                    Matches are calculated using item
+                    category, color, location, item name,
+                    date and time.
+                </p>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div>
+
+            <div class="footer-logo">
+                ReFind
+            </div>
+
+            <p>
+                Helping lost items find their way home.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+        ReFind — Campus Lost & Found
+    </div>
+
+</footer>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>
